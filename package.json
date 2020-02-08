@@ -13,8 +13,7 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
-  
+  "license": "ISC",
   "dependencies": {
     "console.table": "^0.10.0",
     "inquirer": "^7.0.0",
