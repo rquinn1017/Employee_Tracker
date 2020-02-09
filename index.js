@@ -92,8 +92,7 @@ function firstPrompt() {
 
 //Add Department-----------------------------------------------------------
 function addDepartment() {
-  console.log("Inserting an department!")
-
+  
   inquirer
     .prompt([
       {
@@ -103,8 +102,7 @@ function addDepartment() {
       }
     ])
     .then(function (answer) {
-      console.log(answer);
-
+      
       var query = `INSERT INTO department SET ?`
 
       connection.query(query,
@@ -125,8 +123,7 @@ function addDepartment() {
 
 //Add Role---------------------------------------------------------------------------------
 function addRole() {
-  console.log("Inserting an department!")
-
+  
   inquirer
     .prompt([
       {
@@ -146,8 +143,7 @@ function addRole() {
       }
     ])
     .then(function (answer) {
-      console.log(answer);
-
+      
       var query = `INSERT INTO role SET ?`
 
       connection.query(query,
@@ -175,7 +171,7 @@ function addEmployee() {
 function managers() {
 
   var query =
-    `SELECT manager_id 
+    `SELECT DISTINCT manager_id 
     FROM employee e`
 
   connection.query(query, function (err, res) {
