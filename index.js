@@ -414,7 +414,7 @@ function managerArray(employeeChoices) {
   console.log("Updating a manager");
 
   var query =
-    `SELECT e.manager_id 
+    `SELECT DISTINCT e.manager_id 
   FROM employee e`
 
   let managerChoices;
