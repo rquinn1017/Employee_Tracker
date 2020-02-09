@@ -115,7 +115,7 @@ function addDepartment() {
           if (err) throw err;
 
           console.table(res);
-          console.log(res.insertedRows + " record inserted successfully!\n");
+          console.log(res.affectedRows + " record inserted successfully!\n");
 
           firstPrompt();
         });
@@ -160,7 +160,7 @@ function addRole() {
           if (err) throw err;
 
           console.table(res);
-          console.log(res.insertedRows + " record inserted successfully!\n");
+          console.log(res.affectedRows + " record inserted successfully!\n");
 
           firstPrompt();
         });
@@ -169,27 +169,45 @@ function addRole() {
 
 //Add Employee----------------------------------------------------------------------
 function addEmployee() {
-  console.log("Inserting an employee!")
-
-  var query =
-    `SELECT r.id, r.title, r.salary 
-      FROM role r`
-
-  connection.query(query, function (err, res) {
-    if (err) throw err;
-
-    let roleChoices = res.map(({ id, title, salary }) => ({
-      value: id, title: `${title}`, salary: `${salary}`
-    }));
-
-    console.table(res);
-    console.log("RoleToInsert!");
-
-    promptInsert(roleChoices);
-  });
+  managers();
 }
 
-function promptInsert(roleChoices) {
+function managers() {
+ 
+  var query =
+  `SELECT manager_id 
+    FROM employee e`
+
+    connection.query(query, function (err, res) {
+      if (err) throw err;
+  
+      let managersChoices = res.map(({ manager_id }) => ({
+        value: manager_id
+      }));
+  
+      availableRoles(managersChoices);
+    });
+  }
+
+  function availableRoles(managersChoices) {
+
+    var query =
+      `SELECT r.id, r.title, r.salary 
+    FROM role r`
+    let roleChoices;
+  
+    connection.query(query, function (err, res) {
+      if (err) throw err;
+  
+      roleChoices = res.map(({ id, title, salary }) => ({
+        value: id, title: `${title}`, salary: `${salary}`
+      }));
+     
+    insertEmployee(managersChoices, roleChoices)
+    });
+  }
+
+function insertEmployee(managersChoices, roleChoices) {
 
   inquirer
     .prompt([
@@ -213,7 +231,7 @@ function promptInsert(roleChoices) {
         name: "manager_id",
         type: "list",
         message: "What is the employee's manager_id?",
-        choices: managerChoices
+        choices: managersChoices
       }
     ])
     .then(function (answer) {
@@ -232,7 +250,7 @@ function promptInsert(roleChoices) {
           if (err) throw err;
 
           console.table(res);
-          console.log(res.insertedRows + " record inserted successfully!\n");
+          console.log(res.affectedRows + " record inserted successfully!\n");
 
           firstPrompt();
         });
@@ -337,11 +355,11 @@ function roleArray(employeeChoices) {
 
     console.table(res);
    
-    promptEmployeeRole(employeeChoices, roleChoices);
+    updateEmployeeRole(employeeChoices, roleChoices);
   });
 }
 
-function promptEmployeeRole(employeeChoices, roleChoices) {
+function updateEmployeeRole(employeeChoices, roleChoices) {
 
   inquirer
     .prompt([
@@ -419,11 +437,11 @@ function managerArray(employeeChoices) {
 
     console.table(res);
     
-    promptEmployeeRole(employeeChoices, managerChoices);
+    updateEmployeeBoss(employeeChoices, managerChoices);
   });
 }
 
-function promptEmployeeRole(employeeChoices, managerChoices) {
+function updateEmployeeBoss(employeeChoices, managerChoices) {
 
   inquirer
     .prompt([
@@ -476,11 +494,11 @@ function removeDepartment() {
 
     console.table(res);
 
-    promptInsert(deptChoices);
+    promptDeleteDept(deptChoices);
   });
 }
 
-function promptInsert(deptChoices) {
+function promptDeleteDept(deptChoices) {
 
   inquirer
     .prompt([
@@ -526,11 +544,11 @@ function removeRole() {
 
     console.table(res);
 
-    promptInsert(roleChoices);
+    promptRemoveRole(roleChoices);
   });
 }
 
-function promptInsert(roleChoices) {
+function promptRemoveRole(roleChoices) {
 
   inquirer
     .prompt([
@@ -579,11 +597,11 @@ function removeEmployee() {
 
     console.table(res);
 
-    promptDelete(employees);
+    promptDeleteEmployee(employees);
   });
 }
 
-function promptDelete(employees) {
+function promptDeleteEmployee(employees) {
 
   inquirer
     .prompt([
@@ -631,11 +649,11 @@ function viewCombinedSalary() {
 
     console.table(res);
 
-    promptInsert(deptChoices);
+    promptSelectSalary(deptChoices);
   });
 }
 
-function promptInsert(deptChoices) {
+function promptSelectSalary(deptChoices) {
 
   inquirer
     .prompt([
