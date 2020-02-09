@@ -173,39 +173,39 @@ function addEmployee() {
 }
 
 function managers() {
- 
+
   var query =
-  `SELECT manager_id 
+    `SELECT manager_id 
     FROM employee e`
 
-    connection.query(query, function (err, res) {
-      if (err) throw err;
-  
-      let managersChoices = res.map(({ manager_id }) => ({
-        value: manager_id
-      }));
-  
-      availableRoles(managersChoices);
-    });
-  }
+  connection.query(query, function (err, res) {
+    if (err) throw err;
 
-  function availableRoles(managersChoices) {
+    let managersChoices = res.map(({ manager_id }) => ({
+      value: manager_id
+    }));
 
-    var query =
-      `SELECT r.id, r.title, r.salary 
+    availableRoles(managersChoices);
+  });
+}
+
+function availableRoles(managersChoices) {
+
+  var query =
+    `SELECT r.id, r.title, r.salary 
     FROM role r`
-    let roleChoices;
-  
-    connection.query(query, function (err, res) {
-      if (err) throw err;
-  
-      roleChoices = res.map(({ id, title, salary }) => ({
-        value: id, title: `${title}`, salary: `${salary}`
-      }));
-     
+  let roleChoices;
+
+  connection.query(query, function (err, res) {
+    if (err) throw err;
+
+    roleChoices = res.map(({ id, title, salary }) => ({
+      value: id, title: `${title}`, salary: `${salary}`
+    }));
+
     insertEmployee(managersChoices, roleChoices)
-    });
-  }
+  });
+}
 
 function insertEmployee(managersChoices, roleChoices) {
 
@@ -319,7 +319,7 @@ function updateEmployeeRole() {
 }
 
 function employeeArr() {
-  
+
   var query =
     `SELECT e.id, e.first_name, e.last_name
   FROM employee e`
@@ -332,7 +332,7 @@ function employeeArr() {
     }));
 
     console.table(res);
-    
+
     roleArr(employeeList);
   });
 }
@@ -352,7 +352,7 @@ function roleArr(employeeList) {
     }));
 
     console.table(res);
-   
+
     promptEmployeeRole(employeeList, roleList);
   });
 }
@@ -400,7 +400,7 @@ function updateEmployeeManager() {
 }
 
 function employeeArray() {
-  
+
   var query =
     `SELECT e.id, e.first_name, e.last_name
   FROM employee e`
@@ -412,8 +412,6 @@ function employeeArray() {
       value: id, name: `${first_name} ${last_name}`
     }));
 
-    console.table(res);
-    
     managerArray(employeeChoices);
   });
 }
@@ -424,6 +422,7 @@ function managerArray(employeeChoices) {
   var query =
     `SELECT e.manager_id 
   FROM employee e`
+
   let managerChoices;
 
   connection.query(query, function (err, res) {
@@ -433,8 +432,6 @@ function managerArray(employeeChoices) {
       value: manager_id
     }));
 
-    console.table(res);
-    
     updateEmployeeBoss(employeeChoices, managerChoices);
   });
 }
@@ -476,54 +473,53 @@ function updateEmployeeBoss(employeeChoices, managerChoices) {
 };
 
 //View Employee by Manager
-function viewEmployeeByManager(){
- 
+function viewEmployeeByManager() {
+
   var query =
-  `SELECT e.manager_id 
-FROM employee e`
-let managerChoices;
+    `SELECT DISTINCT e.manager_id 
+FROM employee e
+WHERE e.manager_id IS NOT NULL`
+  let managerChoices;
 
-connection.query(query, function (err, res) {
-  if (err) throw err;
+  connection.query(query, function (err, res) {
+    if (err) throw err;
 
-  managerChoices = res.map(({ manager_id }) => ({
-    value: manager_id
-  }));
+    managerChoices = res.map(({ manager_id }) => ({
+      value: manager_id
+    }));
 
-  console.table(res);
-  
-  inquirer
-  .prompt([
-    {
-      type: "list",
-      name: "managerId",
-      message: "Which manager ID do you want to see employees for?",
-      choices: managerChoices
-    },
-  ])
-  .then(function (answer) {
+    inquirer
+      .prompt([
+        {
+          type: "list",
+          name: "managerId",
+          message: "Which manager ID do you want to see employees for?",
+          choices: managerChoices
+        },
+      ])
+      .then(function (answer) {
 
-    var query = `Select * from employee WHERE manager_id = ?`
+        var query = `Select * from employee WHERE manager_id = ?`
 
-    connection.query(query,
-      [answer.managerId
-      ],
-      function (err, res) {
-        if (err) throw err;
+        connection.query(query,
+          [answer.managerId
+          ],
+          function (err, res) {
+            if (err) throw err;
 
-        console.table(res);
-        console.log(res);
+            console.table(res);
+            console.log(res);
 
-        firstPrompt();
+            firstPrompt();
+          });
       });
-  });
-})
+  })
 }
 
 
 //Remove Department--------------------------------------------------------------------------------
 function removeDepartment() {
-  
+
   var query =
     `SELECT d.id, d.name 
       FROM department d`
@@ -554,7 +550,7 @@ function promptDeleteDept(deptChoices) {
       }
     ])
     .then(function (answer) {
-      
+
       var query = `DELETE from department WHERE ?`
 
       connection.query(query,
@@ -573,7 +569,7 @@ function promptDeleteDept(deptChoices) {
 }
 //Remove Role--------------------------------------------------------------------------------
 function removeRole() {
-  
+
   var query =
     `SELECT r.id, r.title, r.salary, r.department_id 
       FROM role r`
@@ -604,7 +600,7 @@ function promptRemoveRole(roleChoices) {
       }
     ])
     .then(function (answer) {
-      
+
       var query = `DELETE from role WHERE ?`
 
       connection.query(query,
@@ -657,7 +653,7 @@ function promptDeleteEmployee(employees) {
       }
     ])
     .then(function (answer) {
-      
+
       var query = `DELETE from employee WHERE ?`
 
       connection.query(query,
@@ -678,7 +674,7 @@ function promptDeleteEmployee(employees) {
 
 //View Combined Salary of Department-------------------------------------------------------------------------------
 function viewCombinedSalary() {
-  
+
   var query =
     `SELECT d.id, d.name 
       FROM department d`
