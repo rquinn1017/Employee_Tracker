@@ -314,13 +314,12 @@ function viewEmployees() {
 
 //Update employee role------------------------------------------------------------------------------------
 function updateEmployeeRole() {
-  employeeArray();
+  employeeArr();
 
 }
 
-function employeeArray() {
-  console.log("Updating an employee");
-
+function employeeArr() {
+  
   var query =
     `SELECT e.id, e.first_name, e.last_name
   FROM employee e`
@@ -328,38 +327,37 @@ function employeeArray() {
   connection.query(query, function (err, res) {
     if (err) throw err;
 
-    let employeeChoices = res.map(({ id, first_name, last_name }) => ({
+    let employeeList = res.map(({ id, first_name, last_name }) => ({
       value: id, name: `${first_name} ${last_name}`
     }));
 
     console.table(res);
-    console.log("employeeArray To Update!\n")
-
-    roleArray(employeeChoices);
+    
+    roleArr(employeeList);
   });
 }
 
-function roleArray(employeeChoices) {
+function roleArr(employeeList) {
 
   var query =
     `SELECT r.id, r.title, r.salary 
   FROM role r`
-  let roleChoices;
+  let roleList;
 
   connection.query(query, function (err, res) {
     if (err) throw err;
 
-    roleChoices = res.map(({ id, title, salary }) => ({
+    roleList = res.map(({ id, title, salary }) => ({
       value: id, title: `${title}`, salary: `${salary}`
     }));
 
     console.table(res);
    
-    updateEmployeeRole(employeeChoices, roleChoices);
+    promptEmployeeRole(employeeList, roleList);
   });
 }
 
-function updateEmployeeRole(employeeChoices, roleChoices) {
+function promptEmployeeRole(employeeList, roleList) {
 
   inquirer
     .prompt([
@@ -367,13 +365,13 @@ function updateEmployeeRole(employeeChoices, roleChoices) {
         type: "list",
         name: "employeeId",
         message: "Which employee do you want to set with the role?",
-        choices: employeeChoices
+        choices: employeeList
       },
       {
         type: "list",
         name: "roleId",
         message: "Which role do you want to set for the selected employee?",
-        choices: roleChoices
+        choices: roleList
       },
     ])
     .then(function (answer) {
@@ -476,6 +474,51 @@ function updateEmployeeBoss(employeeChoices, managerChoices) {
         });
     });
 };
+
+//View Employee by Manager
+function viewEmployeeByManager(){
+ 
+  var query =
+  `SELECT e.manager_id 
+FROM employee e`
+let managerChoices;
+
+connection.query(query, function (err, res) {
+  if (err) throw err;
+
+  managerChoices = res.map(({ manager_id }) => ({
+    value: manager_id
+  }));
+
+  console.table(res);
+  
+  inquirer
+  .prompt([
+    {
+      type: "list",
+      name: "managerId",
+      message: "Which manager ID do you want to see employees for?",
+      choices: managerChoices
+    },
+  ])
+  .then(function (answer) {
+
+    var query = `Select * from employee WHERE manager_id = ?`
+
+    connection.query(query,
+      [answer.managerId
+      ],
+      function (err, res) {
+        if (err) throw err;
+
+        console.table(res);
+        console.log(res);
+
+        firstPrompt();
+      });
+  });
+})
+}
 
 
 //Remove Department--------------------------------------------------------------------------------
