@@ -331,8 +331,6 @@ function employeeArr() {
       value: id, name: `${first_name} ${last_name}`
     }));
 
-    console.table(res);
-
     roleArr(employeeList);
   });
 }
