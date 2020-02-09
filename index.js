@@ -115,7 +115,7 @@ function addDepartment() {
           if (err) throw err;
 
           console.table(res);
-          console.log(res.insertedRows + "Inserted successfully!\n");
+          console.log(res.insertedRows + " record inserted successfully!\n");
 
           firstPrompt();
         });
@@ -160,7 +160,7 @@ function addRole() {
           if (err) throw err;
 
           console.table(res);
-          console.log(res.insertedRows + "Inserted successfully!\n");
+          console.log(res.insertedRows + " record inserted successfully!\n");
 
           firstPrompt();
         });
@@ -232,7 +232,7 @@ function promptInsert(roleChoices) {
           if (err) throw err;
 
           console.table(res);
-          console.log(res.insertedRows + "Inserted successfully!\n");
+          console.log(res.insertedRows + " record inserted successfully!\n");
 
           firstPrompt();
         });
@@ -322,7 +322,6 @@ function employeeArray() {
 }
 
 function roleArray(employeeChoices) {
-  console.log("Updating a role");
 
   var query =
     `SELECT r.id, r.title, r.salary 
@@ -337,8 +336,7 @@ function roleArray(employeeChoices) {
     }));
 
     console.table(res);
-    console.log("roleArray to Update!\n")
-
+   
     promptEmployeeRole(employeeChoices, roleChoices);
   });
 }
@@ -372,7 +370,7 @@ function promptEmployeeRole(employeeChoices, roleChoices) {
           if (err) throw err;
 
           console.table(res);
-          console.log(res.affectedRows + " Updated successfully!");
+          console.log(res.affectedRows + " record updated successfully!");
 
           firstPrompt();
         });
@@ -386,8 +384,7 @@ function updateEmployeeManager() {
 }
 
 function employeeArray() {
-  console.log("Updating an employee");
-
+  
   var query =
     `SELECT e.id, e.first_name, e.last_name
   FROM employee e`
@@ -400,8 +397,7 @@ function employeeArray() {
     }));
 
     console.table(res);
-    console.log("employeeArray To Update!\n")
-
+    
     managerArray(employeeChoices);
   });
 }
@@ -422,8 +418,7 @@ function managerArray(employeeChoices) {
     }));
 
     console.table(res);
-    console.log("roleArray to Update!\n")
-
+    
     promptEmployeeRole(employeeChoices, managerChoices);
   });
 }
@@ -457,7 +452,7 @@ function promptEmployeeRole(employeeChoices, managerChoices) {
           if (err) throw err;
 
           console.table(res);
-          console.log(res.affectedRows + " Updated successfully!");
+          console.log(res.affectedRows + " record updated successfully!");
 
           firstPrompt();
         });
@@ -467,8 +462,7 @@ function promptEmployeeRole(employeeChoices, managerChoices) {
 
 //Remove Department--------------------------------------------------------------------------------
 function removeDepartment() {
-  console.log("Removing a department!")
-
+  
   var query =
     `SELECT d.id, d.name 
       FROM department d`
@@ -499,8 +493,7 @@ function promptInsert(deptChoices) {
       }
     ])
     .then(function (answer) {
-      console.log(answer);
-
+      
       var query = `DELETE from department WHERE ?`
 
       connection.query(query,
@@ -519,8 +512,7 @@ function promptInsert(deptChoices) {
 }
 //Remove Role--------------------------------------------------------------------------------
 function removeRole() {
-  console.log("Removing a role!")
-
+  
   var query =
     `SELECT r.id, r.title, r.salary, r.department_id 
       FROM role r`
@@ -551,8 +543,7 @@ function promptInsert(roleChoices) {
       }
     ])
     .then(function (answer) {
-      console.log(answer);
-
+      
       var query = `DELETE from role WHERE ?`
 
       connection.query(query,
@@ -605,8 +596,7 @@ function promptDelete(employees) {
       }
     ])
     .then(function (answer) {
-      console.log(answer);
-
+      
       var query = `DELETE from employee WHERE ?`
 
       connection.query(query,
@@ -627,8 +617,7 @@ function promptDelete(employees) {
 
 //View Combined Salary of Department-------------------------------------------------------------------------------
 function viewCombinedSalary() {
-  console.log("Show me the money!")
-
+  
   var query =
     `SELECT d.id, d.name 
       FROM department d`
