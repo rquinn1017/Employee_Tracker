@@ -13,7 +13,7 @@ var connection = mysql.createConnection({
 // connect to the mysql server and sql database
 connection.connect(function (err) {
   if (err) throw err;
-  
+
   console.log("connected as id " + connection.threadId);
   firstPrompt();
 });
@@ -90,7 +90,7 @@ function firstPrompt() {
     });
 }
 
-//Add Department
+//Add Department-----------------------------------------------------------
 function addDepartment() {
   console.log("Inserting an department!")
 
@@ -106,7 +106,7 @@ function addDepartment() {
       console.log(answer);
 
       var query = `INSERT INTO department SET ?`
-      // when finished prompting, insert a new item into the db with that info
+
       connection.query(query,
         {
           name: answer.name
@@ -119,12 +119,11 @@ function addDepartment() {
 
           firstPrompt();
         });
-      // console.log(query.sql);
     });
 }
 
 
-//Add Role
+//Add Role---------------------------------------------------------------------------------
 function addRole() {
   console.log("Inserting an department!")
 
@@ -150,7 +149,7 @@ function addRole() {
       console.log(answer);
 
       var query = `INSERT INTO role SET ?`
-      // when finished prompting, insert a new item into the db with that info
+
       connection.query(query,
         {
           title: answer.title,
@@ -165,11 +164,10 @@ function addRole() {
 
           firstPrompt();
         });
-      // console.log(query.sql);
     });
 }
 
-//Add Employee
+//Add Employee----------------------------------------------------------------------
 function addEmployee() {
   console.log("Inserting an employee!")
 
@@ -222,7 +220,7 @@ function promptInsert(roleChoices) {
       console.log(answer);
 
       var query = `INSERT INTO employee SET ?`
-      // when finished prompting, insert a new item into the db with that info
+
       connection.query(query,
         {
           first_name: answer.first_name,
@@ -238,16 +236,15 @@ function promptInsert(roleChoices) {
 
           firstPrompt();
         });
-      // console.log(query.sql);
     });
 }
 
-//View Departments
+//View Departments------------------------------------------------------------------------------
 function viewDepartments() {
   console.log("Viewing departments!")
 
   var query = "Select * from department"
-  // when finished prompting, insert a new item into the db with that info
+
   connection.query(query,
 
     function (err, res) {
@@ -265,7 +262,7 @@ function viewRoles() {
   console.log("Viewing roles!")
 
   var query = "Select * from role"
-  // when finished prompting, insert a new item into the db with that info
+
   connection.query(query,
 
     function (err, res) {
@@ -278,12 +275,12 @@ function viewRoles() {
   )
 };
 
-//View Employees
+//View Employees----------------------------------------------------------------------------------
 function viewEmployees() {
   console.log("Viewing employees!")
 
   var query = "Select * from employee"
-  // when finished prompting, insert a new item into the db with that info
+
   connection.query(query,
 
     function (err, res) {
@@ -297,8 +294,7 @@ function viewEmployees() {
 };
 
 
-//Update employee role
-
+//Update employee role------------------------------------------------------------------------------------
 function updateEmployeeRole() {
   employeeArray();
 
@@ -367,7 +363,7 @@ function promptEmployeeRole(employeeChoices, roleChoices) {
     .then(function (answer) {
 
       var query = `UPDATE employee SET role_id = ? WHERE id = ?`
-      // when finished prompting, insert a new item into the db with that info
+
       connection.query(query,
         [answer.roleId,
         answer.employeeId
@@ -380,12 +376,11 @@ function promptEmployeeRole(employeeChoices, roleChoices) {
 
           firstPrompt();
         });
-      // console.log(query.sql);
     });
 };
 
-//Update employee manager
-function updateEmployeeManager() { 
+//Update employee manager--------------------------------------------------------------------------
+function updateEmployeeManager() {
   employeeArray()
 
 }
@@ -401,7 +396,7 @@ function employeeArray() {
     if (err) throw err;
 
     let employeeChoices = res.map(({ id, first_name, last_name }) => ({
-      value: id, name: `${first_name} ${last_name}`      
+      value: id, name: `${first_name} ${last_name}`
     }));
 
     console.table(res);
@@ -422,8 +417,8 @@ function managerArray(employeeChoices) {
   connection.query(query, function (err, res) {
     if (err) throw err;
 
-    managerChoices = res.map(({ manager_id}) => ({
-      value: manager_id     
+    managerChoices = res.map(({ manager_id }) => ({
+      value: manager_id
     }));
 
     console.table(res);
@@ -453,10 +448,10 @@ function promptEmployeeRole(employeeChoices, managerChoices) {
     .then(function (answer) {
 
       var query = `UPDATE employee SET manager_id = ? WHERE id = ?`
-      // when finished prompting, insert a new item into the db with that info
+
       connection.query(query,
-        [ answer.managerId,  
-          answer.employeeId
+        [answer.managerId,
+        answer.employeeId
         ],
         function (err, res) {
           if (err) throw err;
@@ -466,12 +461,11 @@ function promptEmployeeRole(employeeChoices, managerChoices) {
 
           firstPrompt();
         });
-      // console.log(query.sql);
     });
 };
 
 
-//Remove Department
+//Remove Department--------------------------------------------------------------------------------
 function removeDepartment() {
   console.log("Removing a department!")
 
@@ -508,7 +502,7 @@ function promptInsert(deptChoices) {
       console.log(answer);
 
       var query = `DELETE from department WHERE ?`
-      
+
       connection.query(query,
         {
           id: answer.deptID,
@@ -516,14 +510,14 @@ function promptInsert(deptChoices) {
         function (err, res) {
           if (err) throw err;
 
-        console.log(res.affectedRows + " record deleted successfully!\n");
+          console.log(res.affectedRows + " record deleted successfully!\n");
 
           firstPrompt();
         });
-      
+
     });
 }
-//Remove Role
+//Remove Role--------------------------------------------------------------------------------
 function removeRole() {
   console.log("Removing a role!")
 
@@ -560,7 +554,7 @@ function promptInsert(roleChoices) {
       console.log(answer);
 
       var query = `DELETE from role WHERE ?`
-      
+
       connection.query(query,
         {
           id: answer.roleNum,
@@ -572,12 +566,12 @@ function promptInsert(roleChoices) {
 
           firstPrompt();
         });
-      
+
     });
 }
 
 
-// //Remove Employee
+// //Remove Employee--------------------------------------------------------------------------------
 function removeEmployee() {
   console.log("Remove employee!")
 
@@ -614,7 +608,7 @@ function promptDelete(employees) {
       console.log(answer);
 
       var query = `DELETE from employee WHERE ?`
-      
+
       connection.query(query,
         {
           id: answer.empID,
@@ -626,12 +620,12 @@ function promptDelete(employees) {
 
           firstPrompt();
         });
-      
+
     });
 }
 
 
-//View Combined Salary of Department
+//View Combined Salary of Department-------------------------------------------------------------------------------
 function viewCombinedSalary() {
   console.log("Show me the money!")
 
@@ -668,7 +662,7 @@ function promptInsert(deptChoices) {
       console.log(answer);
 
       var query = `Select SUM(salary) from role WHERE ?`
-      
+
       connection.query(query,
         {
           id: answer.deptID,
@@ -676,10 +670,10 @@ function promptInsert(deptChoices) {
         function (err, res) {
           if (err) throw err;
 
-        console.log(res);
+          console.log(res);
 
           firstPrompt();
         });
-      
+
     });
 }
